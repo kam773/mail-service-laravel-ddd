@@ -1,0 +1,45 @@
+name: "Setup Laravel Environment"
+description: "Common setup steps for Laravel CI/CD"
+inputs:
+  php-version:
+    description: "PHP version to use"
+    required: true
+    default: "8.2"
+  extensions:
+    description: "PHP extensions to install"
+    required: false
+    default: "mbstring, xml, ctype, iconv, intl, pdo_sqlite"
+  coverage:
+    description: "Coverage driver (none, xdebug, pcov)"
+    required: false
+    default: "none"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ inputs.php-version }}
+        extensions: ${{ inputs.extensions }}
+        coverage: ${{ inputs.coverage }}
+
+    - name: Cache Composer packages
+      uses: actions/cache@v3
+      with:
+        path: vendor
+        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-
+
+    - name: Install dependencies
+      shell: bash
+      run: composer install --prefer-dist --no-progress --no-interaction
+
+    - name: Copy .env
+      shell: bash
+      run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+
+    - name: Generate key
+      shell: bash
+      run: php artisan key:generate

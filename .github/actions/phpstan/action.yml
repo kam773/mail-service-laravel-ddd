@@ -1,0 +1,14 @@
+name: "Run PHPStan Analysis"
+description: "Run PHPStan static analysis on Laravel project"
+inputs:
+  memory-limit:
+    description: "Memory limit for PHPStan"
+    required: false
+    default: "1G"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run PHPStan
+      shell: bash
+      run: ./vendor/bin/phpstan analyse --memory-limit=${{ inputs.memory-limit }}

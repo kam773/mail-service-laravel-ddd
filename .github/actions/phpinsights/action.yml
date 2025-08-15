@@ -1,0 +1,26 @@
+name: "Run PHP Insights Analysis"
+description: "Run PHP Insights code quality analysis on Laravel project"
+inputs:
+  min-quality:
+    description: "Minimum quality score"
+    required: false
+    default: "80"
+  min-complexity:
+    description: "Minimum complexity score"
+    required: false
+    default: "90"
+  min-architecture:
+    description: "Minimum architecture score"
+    required: false
+    default: "70"
+  min-style:
+    description: "Minimum style score"
+    required: false
+    default: "75"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run PHP Insights
+      shell: bash
+      run: ./vendor/bin/phpinsights --no-interaction --min-quality=${{ inputs.min-quality }} --min-complexity=${{ inputs.min-complexity }} --min-architecture=${{ inputs.min-architecture }} --min-style=${{ inputs.min-style }}
