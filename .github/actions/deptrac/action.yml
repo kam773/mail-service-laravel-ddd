@@ -1,0 +1,9 @@
+name: "Run Deptrac Analysis"
+description: "Run Deptrac architecture dependency analysis on Laravel project"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run Deptrac
+      shell: bash
+      run: ./vendor/bin/deptrac analyse

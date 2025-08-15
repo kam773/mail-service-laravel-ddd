@@ -1,0 +1,35 @@
+name: "Run Laravel Tests"
+description: "Run PHPUnit tests with coverage for Laravel project"
+inputs:
+  coverage-min:
+    description: "Minimum coverage percentage"
+    required: false
+    default: "80"
+  db-connection:
+    description: "Database connection type"
+    required: false
+    default: "sqlite"
+  db-database:
+    description: "Database path"
+    required: false
+    default: "database/database.sqlite"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Directory Permissions
+      shell: bash
+      run: chmod -R 777 storage bootstrap/cache
+
+    - name: Create Database
+      shell: bash
+      run: |
+        mkdir -p database
+        touch database/database.sqlite
+
+    - name: Run Tests
+      shell: bash
+      env:
+        DB_CONNECTION: ${{ inputs.db-connection }}
+        DB_DATABASE: ${{ inputs.db-database }}
+      run: php artisan test --coverage --min=${{ inputs.coverage-min }}
