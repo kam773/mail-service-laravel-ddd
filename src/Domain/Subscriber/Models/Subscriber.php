@@ -21,4 +21,9 @@ class Subscriber extends BaseModel
     {
         return $this->belongsToMany(Tag::class);
     }
+
+    public function form(): BelongsTo
+    {
+        return $this->belongsTo(Form::class);
+    }
 }
